@@ -204,7 +204,6 @@ exports.allUsers = catchAsyncErrors(async (req, res, next) => {
 // Get user details => /api/v1/admin/user/:id
 exports.getUserDetails = catchAsyncErrors(async (req, res, next) => {
 
-    res.send(req.cookies.token);
     const user = await User.findById(req.params.id);
 
     if(!user) {
