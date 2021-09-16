@@ -11,12 +11,13 @@ const { send } = require('process');
 //Register a user => /api/v1/register
 exports.registerUser = catchAsyncErrors( async (req, res, next) => {
 
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
 
     const user = await User.create({
         name,
         email,
         password,
+        role,
         avatar: {
             public_id: 'asd',
             url: 'asd'
@@ -33,21 +34,24 @@ exports.loginUser = catchAsyncErrors( async(req, res, next) => {
 
     // checks if email and password is entered by user
     if (!email || !password) {
-        return next(new ErrorHandler('Please enter email & password', 400))
+        // return next(new ErrorHandler('Please enter email & password', 400))
+        return res.json({ "error": "Please enter email & password"})
     }
 
     // Finding user in database
     const user = await User.findOne({ email }).select('+password');
 
     if(!user) {
-        return next(new ErrorHandler('Invalid Email or Password', 500));
+        // return next(new ErrorHandler('Invalid Email or Password', 500));
+        return res.json({ "error": "Invalid Email or Password"})
     }
 
     // Checks if password is correct or not
     const isPasswordMatched = await user.comparePassword(password);
 
     if (!isPasswordMatched) {
-        return next(new ErrorHandler('Invalid Email or Password', 500));
+        //return next(new ErrorHandler('Invalid Email or Password', 500));
+        return res.json({ "error": "Invalid Email or Password"})
     }
 
     sendToken(user, 200, res)
@@ -154,7 +158,8 @@ exports.updatePassword = catchAsyncErrors(async (req, res, next) => {
 exports.updateProfile = catchAsyncErrors(async (req, res, next) => {
     const newUserData = {
         name: req.body.name,
-        email: req.body.email
+        email: req.body.email,
+        role: req.body.role
     }
 
     // Update avatar: TODO 
@@ -187,6 +192,7 @@ exports.logout = catchAsyncErrors(async (req, res, next) => {
 
 // Get all users => /api/v1/admin/users
 exports.allUsers = catchAsyncErrors(async (req, res, next) => {
+    console.log('no');
     const users = await User.find();
 
     res.status(200).json({
@@ -197,6 +203,8 @@ exports.allUsers = catchAsyncErrors(async (req, res, next) => {
 
 // Get user details => /api/v1/admin/user/:id
 exports.getUserDetails = catchAsyncErrors(async (req, res, next) => {
+
+    res.send(req.cookies.token);
     const user = await User.findById(req.params.id);
 
     if(!user) {
@@ -205,7 +213,7 @@ exports.getUserDetails = catchAsyncErrors(async (req, res, next) => {
 
     res.status(200).json({
         success: true,
-        user
+        user: req.cookies.token
     })
 });
 
@@ -232,6 +240,7 @@ exports.updateUser = catchAsyncErrors(async (req, res, next) => {
 
 // Delete user => /api/v1/admin/user/:id
 exports.deleteUser = catchAsyncErrors(async (req, res, next) => {
+
     const user = await User.findById(req.params.id);
 
     if (!user) {
