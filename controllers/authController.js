@@ -129,7 +129,6 @@ exports.resetPassword = catchAsyncErrors(async (req, res, next) => {
 
 // Get currently logged in user details => /api/v1/me
 exports.getUserProfile = catchAsyncErrors(async (req, res, next) => {
-    
     const user = await User.findById(req.user.id);
 
     res.status(200).json({
@@ -177,22 +176,18 @@ exports.updateProfile = catchAsyncErrors(async (req, res, next) => {
 
 // Logout user => /api/v1/logout
 exports.logout = catchAsyncErrors(async (req, res, next) => {
-    res.cookie('token', null, {
-        expires: new Date(Date.now()),
-        httpOnly: true
-    })
-
-    res.status(200).json({
-        success: true,
-        message: 'Logged out'
-    });
+    try {
+        res.clearCookie('token')
+        return res.json({ msg: "Logged out"})
+    } catch (err) {
+        return res.status(500).json({ msg: err.message })
+    }
 });
 
 // Admin Routes
 
 // Get all users => /api/v1/admin/users
 exports.allUsers = catchAsyncErrors(async (req, res, next) => {
-    console.log('no');
     const users = await User.find();
 
     res.status(200).json({
