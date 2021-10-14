@@ -1,5 +1,5 @@
 const express = require('express');
-const { getCategories, addCategory, updateCategories, deleteCategories } = require('../controllers/categoryController');
+const { getCategories, getCategoriesParent, getCategory, addCategory, updateCategories, deleteCategories } = require('../controllers/categoryController');
 const { isAuthenticatedUser, authorizeRoles } = require('../middlewares/auth');
 const router = express.Router();
 const multer = require('multer');
@@ -15,9 +15,11 @@ const storage = multer.diskStorage({
     }
 });
 
-router.get('/category/categories', getCategories);
+router.get('/categories', isAuthenticatedUser, getCategories);
+router.get('/categories-parent', isAuthenticatedUser, getCategoriesParent);
 router.post('/category/create', addCategory);
+router.get('/category/:id', getCategory);
 router.put('/category/update', updateCategories);
-router.delete('/category/delete', deleteCategories);
+router.delete('/category/delete/:id', deleteCategories);
 
 module.exports = router;
