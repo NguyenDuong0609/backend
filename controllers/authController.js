@@ -10,21 +10,24 @@ const { send } = require('process');
 
 //Register a user => /api/v1/register
 exports.registerUser = catchAsyncErrors( async (req, res, next) => {
+    try {
+        const { name, email, password, role } = req.body;
 
-    const { name, email, password, role } = req.body;
-
-    const user = await User.create({
-        name,
-        email,
-        password,
-        role,
-        avatar: {
-            public_id: 'asd',
-            url: 'asd'
-        }
-    })
-
-    sendToken(user, 200, res);
+        const user = await User.create({
+            name,
+            email,
+            password,
+            role,
+            avatar: {
+                public_id: 'asd',
+                url: 'asd'
+            }
+        })
+    
+        sendToken(user, 200, res);
+    } catch(error) {
+        return res.json({ status: 500, error: 'Duplicated User' });
+    }
 });
 
 // Login User => /api/v1/login
@@ -155,23 +158,27 @@ exports.updatePassword = catchAsyncErrors(async (req, res, next) => {
 
 // Update user profile => /api/v1/me/update
 exports.updateProfile = catchAsyncErrors(async (req, res, next) => {
-    const newUserData = {
-        name: req.body.name,
-        email: req.body.email,
-        role: req.body.role
+    try {
+        const newUserData = {
+            name: req.body.name,
+            email: req.body.email,
+            role: req.body.role
+        }
+    
+        // Update avatar: TODO 
+        const user = await User.findByIdAndUpdate(req.user.id, newUserData, {
+            new: true,
+            runValidators: true,
+            useFindAndModify: false
+        })
+    
+        res.status(200).json({
+            success: true,
+    
+        });
+    } catch(error) {
+        return res.json({ status: 500, error: 'Duplicated User' });
     }
-
-    // Update avatar: TODO 
-    const user = await User.findByIdAndUpdate(req.user.id, newUserData, {
-        new: true,
-        runValidators: true,
-        useFindAndModify: false
-    })
-
-    res.status(200).json({
-        success: true,
-
-    });
 });
 
 // Logout user => /api/v1/logout
@@ -213,23 +220,27 @@ exports.getUserDetails = catchAsyncErrors(async (req, res, next) => {
 
 // Update user profile => /api/v1/admin/user/:id
 exports.updateUser = catchAsyncErrors(async (req, res, next) => {
-    const newUserData = {
-        name: req.body.name,
-        email: req.body.email,
-        role: req.body.role
+    try {
+        const newUserData = {
+            name: req.body.name,
+            email: req.body.email,
+            role: req.body.role
+        }
+    
+        // Update avatar: TODO 
+        const user = await User.findByIdAndUpdate(req.params.id, newUserData, {
+            new: true,
+            runValidators: true,
+            useFindAndModify: false
+        });
+    
+        res.status(200).json({
+            success: true,
+    
+        });
+    } catch (error) {
+        return res.json({ status: 500, error: 'Duplicated User' });
     }
-
-    // Update avatar: TODO 
-    const user = await User.findByIdAndUpdate(req.params.id, newUserData, {
-        new: true,
-        runValidators: true,
-        useFindAndModify: false
-    })
-
-    res.status(200).json({
-        success: true,
-
-    });
 });
 
 // Delete user => /api/v1/admin/user/:id
