@@ -12,6 +12,8 @@ var usersRouter = require('./routes/users');
 const auth = require('./routes/auth');
 const categoryRouter = require('./routes/category');
 const blogRouter = require('./routes/blog');
+const blogClientRouter = require('./routes/client/blog');
+const categoryClientRouter = require('./routes/client/category');
 
 // Setup mongodb
 const connectDatabase = require('./config/db');
@@ -50,6 +52,8 @@ app.use(function(req, res, next) {
 app.use('/api/v1/admin', usersRouter);
 app.use('/api/v1/admin', categoryRouter);
 app.use('/api/v1/admin', blogRouter);
+app.use('/api/v1/client', blogClientRouter);
+app.use('/api/v1/client', categoryClientRouter);
 // app.use('/api/v1', auth);
 
 // catch 404 and forward to error handler
