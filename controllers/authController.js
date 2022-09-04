@@ -32,7 +32,7 @@ exports.registerUser = catchAsyncErrors( async (req, res, next) => {
 
 // Login User => /api/v1/login
 exports.loginUser = catchAsyncErrors( async(req, res, next) => {
-
+    console.log('login');
     const { email, password } = req.body;
 
     // checks if email and password is entered by user
