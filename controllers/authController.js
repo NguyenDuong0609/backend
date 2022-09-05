@@ -1,4 +1,3 @@
-console.log('login');
 const User = require('../models/user');
 
 const ErrorHandler = require('../utils/errorHandler');
@@ -32,34 +31,34 @@ exports.registerUser = catchAsyncErrors( async (req, res, next) => {
 });
 
 // Login User => /api/v1/login
-// exports.loginUser = catchAsyncErrors( async(req, res, next) => {
-//     console.log('login');
-//     const { email, password } = req.body;
+exports.loginUser = catchAsyncErrors( async(req, res, next) => {
+    console.log('login');
+    const { email, password } = req.body;
 
-//     // checks if email and password is entered by user
-//     if (!email || !password) {
-//         // return next(new ErrorHandler('Please enter email & password', 400))
-//         return res.json({ "error": "Please enter email & password"})
-//     }
+    // checks if email and password is entered by user
+    if (!email || !password) {
+        // return next(new ErrorHandler('Please enter email & password', 400))
+        return res.json({ "error": "Please enter email & password"})
+    }
 
-//     // Finding user in database
-//     const user = await User.findOne({ email }).select('+password');
+    // Finding user in database
+    const user = await User.findOne({ email }).select('+password');
 
-//     if(!user) {
-//         // return next(new ErrorHandler('Invalid Email or Password', 500));
-//         return res.json({ "error": "Invalid Email or Password"})
-//     }
+    if(!user) {
+        // return next(new ErrorHandler('Invalid Email or Password', 500));
+        return res.json({ "error": "Invalid Email or Password"})
+    }
 
-//     // Checks if password is correct or not
-//     const isPasswordMatched = await user.comparePassword(password);
+    // Checks if password is correct or not
+    const isPasswordMatched = await user.comparePassword(password);
 
-//     if (!isPasswordMatched) {
-//         //return next(new ErrorHandler('Invalid Email or Password', 500));
-//         return res.json({ "error": "Invalid Email or Password"})
-//     }
+    if (!isPasswordMatched) {
+        //return next(new ErrorHandler('Invalid Email or Password', 500));
+        return res.json({ "error": "Invalid Email or Password"})
+    }
 
-//     sendToken(user, 200, res)
-// });
+    sendToken(user, 200, res)
+});
 
 exports.loginUser = async (req, res) => {
     try {
