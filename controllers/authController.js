@@ -32,7 +32,6 @@ exports.registerUser = catchAsyncErrors( async (req, res, next) => {
 
 // Login User => /api/v1/login
 exports.loginUser = catchAsyncErrors( async(req, res, next) => {
-    console.log('login');
     const { email, password } = req.body;
 
     // checks if email and password is entered by user
@@ -59,14 +58,6 @@ exports.loginUser = catchAsyncErrors( async(req, res, next) => {
 
     sendToken(user, 200, res)
 });
-
-exports.loginUser = async (req, res) => {
-    try {
-        console.log('login')
-      } catch (error) {
-        return res.status(500).json({ msg: err.message });
-      }
-}
 
 // Forgot Password => /api/v1/password/forgot
 exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
