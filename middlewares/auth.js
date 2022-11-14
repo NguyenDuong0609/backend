@@ -6,14 +6,13 @@ const catchAsyncErrors = require('./catchAsyncErrors');
 
 // checks if user is authenticated or not
 exports.isAuthenticatedUser = catchAsyncErrors(async (req, res, next) => {
-
     const token = req.headers.authorization;
-    //const token = req.cookies.token;
 
     if(!token) {
-        return next(new ErrorHandler('Login first to access this resource.', 401))
+        //return next(new ErrorHandler('Login first to access this resource.', 401));
+        ErrorHandler(404, false, 'token required', res);
+        return;
     }
-
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = await User.findById(decoded.id);
     next();
@@ -27,7 +26,7 @@ exports.authorizeRoles = (...roles) => {
             //     new ErrorHandler(`Role (${req.user.role}) is not allowed to access this resource`, 403)
             // )
 
-            return res.json({ error: `Role (${req.user.role}) is not allowed to access this resource`})
+            return res.status(500).json({ success: false, error: `Role (${req.user.role}) is not allowed to access this resource`})
         }
         next()
     }

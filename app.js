@@ -7,19 +7,18 @@ var cors = require('cors');
 
 const db = require('./config/db');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-const auth = require('./routes/auth');
-const categoryRouter = require('./routes/category');
-const blogRouter = require('./routes/blog');
-const blogClientRouter = require('./routes/client/blog');
-const categoryClientRouter = require('./routes/client/category');
+var usersRouter = require('./routes/admin/users');
+const categoryRouter = require('./routes/admin/category');
+const blogRouter = require('./routes/admin/blog');
+const blogClientRouter = require('./routes/blog');
+const categoryClientRouter = require('./routes/category');
 
 // Setup mongodb
 const connectDatabase = require('./config/db');
 const env = require('dotenv').config();
 
 const errorMiddleware = require('./middlewares/errors');
+const errorHandler = require('./utils/errorHandler');
 const passport = require('passport');
 
 // Connecting to database
@@ -33,6 +32,7 @@ app.set('view engine', 'jade');
 
 // Middleware to handle errors
 app.use(errorMiddleware);
+app.use(errorHandler);
 app.use(logger('dev'));
 app.use(express.json());
 app.use(passport.initialize());
