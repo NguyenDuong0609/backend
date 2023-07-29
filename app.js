@@ -12,6 +12,7 @@ const categoryRouter = require('./routes/admin/category');
 const blogRouter = require('./routes/admin/blog');
 const blogClientRouter = require('./routes/blog');
 const categoryClientRouter = require('./routes/category');
+const portFolioRouter = require('./routes/portfolio');
 
 // Setup mongodb
 const connectDatabase = require('./config/db');
@@ -54,6 +55,7 @@ app.use('/api/v1/admin', categoryRouter);
 app.use('/api/v1/admin', blogRouter);
 app.use('/api/v1/client', blogClientRouter);
 app.use('/api/v1/client', categoryClientRouter);
+app.use('/api/v1/portfolio', portFolioRouter);
 // app.use('/api/v1', auth);
 
 // catch 404 and forward to error handler
